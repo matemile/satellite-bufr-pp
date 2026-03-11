@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import math
+import numpy as np
 from eccodes import (
     codes_bufr_new_from_file,
     codes_set,
@@ -87,6 +88,7 @@ def find_subsets(
             for i in range(nsub):
                 ok = True
 
+                #print('isclose',i,isclose(lats[i], target_dlat, lat_tol))
                 if target_lat is not None and not isclose(lats[i], target_lat, lat_tol):
                     continue
                 if target_lon is not None and not isclose(lons[i], target_lon, lon_tol):
@@ -125,18 +127,18 @@ def find_subsets(
 
 if __name__ == "__main__":
     if len(sys.argv) < 7:
-        print(f"Usage: {sys.argv[0]} BUFR_FILE CHANNEL LAT LON VALUE", file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} BUFR_FILE VALUE LAT LON CH OUTFILE", file=sys.stderr)
         print(
-            f"{sys.argv[0]} BUFRFILE CHANNEL LAT(2dig) LON(2dig) VALUE(2dig) OUTFILE",
+            f"{sys.argv[0]} BUFRFILE VALUE(2dig) LAT(rad) LON(rad) CHANNEL(int) OUTFILE",
             file=sys.stderr,
         )
         sys.exit(1)
 
     bufr_file = sys.argv[1]
-    target_ch = int(sys.argv[2])
+    target_val = float(sys.argv[2])
     target_lat = float(sys.argv[3])
     target_lon = float(sys.argv[4])
-    target_val = float(sys.argv[5])
+    target_ch = int(sys.argv[5])
     out_file = sys.argv[6]
 
     # Example: search specifically for your ATOVS channel 4 case
@@ -148,10 +150,13 @@ if __name__ == "__main__":
         },
     ]
 
+    target_dlat = np.round(np.rad2deg(target_lat), 2)
+    target_dlon = np.round(np.rad2deg(target_lon), 2)
+
     matches = find_subsets(
         bufr_file,
-        target_lat=target_lat,
-        target_lon=target_lon,
+        target_lat=target_dlat,
+        target_lon=target_dlon,
         extra_conditions=extra_conditions,
     )
 
