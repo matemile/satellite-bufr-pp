@@ -21,16 +21,27 @@ odbsql -q "select obsvalue,lat,lon,vertco_reference_1 from hdr,body"
 Output
 
 > ...
+>
 > 237.86 1.2562600703175 0.3584993550059 3
+>
 > 252.02 1.2562600703175 0.3584993550059 4
+>
 > 263.17 1.2562600703175 0.3584993550059 5
+>
 > 238.85 1.2016975872416 0.14394952071674 3
+>
 > 240.38 1.2266941927887 -0.0010541788682046 3
+>
 > 249.95 1.2266941927887 -0.0010541788682046 4
+>
 > 253.36 1.2266941927887 -0.0010541788682046 5
+>
 > 245.75 1.1098164740997 0.017175785168876 3
+>
 > 263.71 1.1098164740997 0.017175785168876 4
+>
 > 274 1.1098164740997 0.017175785168876 5
+>
 > ...
 
 Choose the one which is suitable for your experiment.
@@ -66,7 +77,7 @@ For example:
 ./driver.sh /path/to/your/scratch/hm_home/your_exp/archive/observations/year/month/day/hour/amsub.thinned.yourdatehour 245.95 1.2266941927887 -0.0010541788682046 4 your-single-obs.bufr
 ```
 
-# Check your output (optional, not manadatory)
+#### Check your output (optional, not manadatory)
 ```bash
 module reset
 module unload odb_api
@@ -74,13 +85,14 @@ module load python3 ecmwf-toolbox
 bufr_dump -E"python" $output_single_obs.bufr > $output_single_obs.py
 ```
 
-# Rerun your assimilation
+### Rerun your assimilation
 Modify your Bator script and fetch the single obs BUFR
 
 For example in scr/Bator
 
 >
 > #ln -sf $OBDIR/amsub.thinned$DTG ./BUFR.amsub
+>
 > ln -sf /your/git/satellite-bufr-pp/your-single-obs.bufr ./BUFR.amsub
 >
 
