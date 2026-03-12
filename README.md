@@ -92,7 +92,7 @@ bufr_dump -p $output_single_obs.bufr
 The driver script by default makes a plot about the location of the single obs
 See the above example here:
 
-![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/example.png?raw=true)
+![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/singleobs/example.png?raw=true)
 
 ### Rerun your assimilation
 Modify your Bator script and fetch the single obs BUFR
