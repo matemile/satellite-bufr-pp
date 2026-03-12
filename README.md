@@ -59,7 +59,7 @@ git clone git@github.com:matemile/satellite-bufr-pp.git
 Run the driver script as the following.
 
 ```bash
-./driver.sh arg1 arg2 arg3 arg4 arg5 arg6
+./driver.sh arg1 arg2 arg3 arg4 arg5 arg6 arg7
 ``` 
 
 where
@@ -70,11 +70,12 @@ where
 - arg4: Longitude of the desired observation record in radian
 - arg5: Channel number (intiger) of the desired record
 - arg6: Output satellite BUFR include only the desired single obs.
+- arg7: The name of the instrument (available: AMSU-A,MHS,ATMS,AWS)
 
 For example:
 
 ```bash
-./driver.sh /path/to/your/scratch/hm_home/your_exp/archive/observations/year/month/day/hour/amsub.thinned.yourdatehour 245.95 1.2266941927887 -0.0010541788682046 4 your-single-obs.bufr
+./driver.sh /path/to/your/scratch/hm_home/your_exp/archive/observations/year/month/day/hour/amsub.thinned.yourdatehour 245.95 1.2266941927887 -0.0010541788682046 4 your-single-obs.bufr MHS
 ```
 
 #### Check your output (optional, not manadatory)
