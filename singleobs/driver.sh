@@ -24,4 +24,4 @@ echo "Instrument: $7";
 python3 extract_write.py $1 $2 $3 $4 $5 $6 $7
 
 # Plot single obs on a map
-#python3 plot_singleo.py $6 $5
+python3 plot_singleo.py $6 $5

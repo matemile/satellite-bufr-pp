@@ -7,7 +7,7 @@ A repository to alter or make certain processes with satellite BUFR data. It hel
 ### Select an active radiance record/observation
 
 Run your Harmonie-AROME assimilation and get a CCMA ODB with active radiance observations. Extract Obsvalue, latitude, longitude, channel number from the ODB and select the desired observation to be used as the single observation.
-An example (*can be extracted differently*).
+An example (*can be done differently*).
 
 ```bash
 cd /path/to/your/scratch/hm_home/your_exp/yourdate_hour/odb_ccma
@@ -79,12 +79,20 @@ For example:
 ```
 
 #### Check your output (optional, not manadatory)
+
 ```bash
 module reset
 module unload odb_api
 module load python3 ecmwf-toolbox
-bufr_dump -E"python" $output_single_obs.bufr > $output_single_obs.py
+bufr_dump -p $output_single_obs.bufr
 ```
+
+#### Check the single obs on map
+
+The driver script by default makes a plot about the location of the single obs
+See the above example here:
+
+![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/example.png?raw=true)
 
 ### Rerun your assimilation
 Modify your Bator script and fetch the single obs BUFR
