@@ -11,6 +11,7 @@ if [ "$#" -ne 7 ]; then
     exit 1
 fi
 # Execution
+echo "---------------";
 echo "Input BUFR: $1";
 echo "Obsvalue: $2";
 echo "Latitude: $3";
@@ -18,6 +19,7 @@ echo "Longitude: $4";
 echo "Channel num: $5";
 echo "Output Singleobs BUFR: $6";
 echo "Instrument: $7";
+echo "---------------";
 
 #python3 extract_write.py amsub.thinned2025092615 4 70.94 -7.65 248.38 single-out.bufr
 # Extract and write chosen single obs in another BUFR

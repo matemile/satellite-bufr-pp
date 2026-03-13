@@ -212,6 +212,27 @@ if __name__ == "__main__":
         extra_conditions=extra_conditions,
     )
 
+    # Checking matches
+    if len(matches) == 0:
+        print("NO MATCHES FOUND!")
+        print("Possible causes:")
+        print("-Latitude/longitude tolerance too strict")
+        print("-Target brightness temperature doesn't exist") 
+        print("-Wrong channel key (check #N#brightnessTemperature)")
+        print("-BUFR file doesn't contain expected data"),
+        raise ValueError("No matching observation found in BUFR file")
+    
+    elif len(matches) > 1:
+        print(f"WARNING: {len(matches)} matches found, using first:")
+        for i, m in enumerate(matches[:3]):  # Show first 3
+            print(f"  {i+1}: msg={m['message']}, sub={m['subset']}, "
+                  f"lat={m['lat']:.3f}, lon={m['lon']:.3f}")
+        print("  (use stricter tolerance or more conditions to get unique match)")
+    else:
+        # Exactly 1 match ✓
+        target = matches[0]
+        print(f"Perfect match: message={target['message']}, subset={target['subset']}")
+
     temp_file = "subset.bufr"
 
     with open(bufr_file, "rb") as fin, open(temp_file, "wb") as fout:
