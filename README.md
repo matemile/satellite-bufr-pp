@@ -79,16 +79,18 @@ For example:
 
 or
 
-´´´bash
+```bash
 ./driver.sh /path/to/your/dir/awsyourdatehour AWS 215.32 1.1743936564234 0.42650261865135 7,4,5,12,14,15,16,17,18
-´´´
+```
 
 #### Output files
 
 The driver script create two BUFR files as output. A BUFR file which contains all channels for the given single obs as single subset. Another one which consists of only selected channels according to the list provided in arg6.
 
-- single\_subset\_$arg2.bufr
-- single\_selected\_$arg2.bufr
+```bash
+single\_subset\_$arg2.bufr
+single\_selected\_$arg2.bufr
+```
 
 #### Check your output (optional, not manadatory)
 
