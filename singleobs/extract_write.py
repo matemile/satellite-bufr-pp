@@ -16,6 +16,12 @@ from eccodes import (
 def isclose(a, b, atol):
     return abs(a - b) <= atol
 
+def parse_channels_arg(arg):
+    """Convert '1,3,4' -> [1,3,4] from sys.argv"""
+    if not arg or arg == '':
+        raise ValueError("No channel to be selected")
+    return [int(x.strip()) for x in arg.split(',')]
+
 def find_subsets(
     filename,
     target_lat=None,
@@ -133,9 +139,9 @@ def blank_unwanted_channels(infile, outfile, chlist, keep_channel):
             raise RuntimeError("No message found")
 
         codes_set(h, "unpack", 1)
-        
+
         for ch_num in chlist:
-            if ch_num == keep_channel:
+            if ch_num in keep_channel:
                 print(f"-- Keeping channel {ch_num}")
                 continue
             bt_key = f"#{ch_num}#brightnessTemperature"
@@ -160,26 +166,28 @@ def blank_unwanted_channels(infile, outfile, chlist, keep_channel):
         print(f"Wrote to {outfile}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 8:
-        print(f"Usage: {sys.argv[0]} BUFR_FILE VALUE LAT LON CH OUTFILE SENSORNAME", file=sys.stderr)
+    if len(sys.argv) < 7:
+        print(f"Usage: {sys.argv[0]} BUFR_FILE SENSORNAME VALUE LAT LON CH", file=sys.stderr)
         print(
-            f"{sys.argv[0]} BUFR_FILE VALUE LAT LON CH OUTFILE SENSORNAME",
+            f"{sys.argv[0]} BUFR_FILE SENSORNAME VALUE LAT LON CH",
             file=sys.stderr,
         )
         sys.exit(1)
 
     bufr_file = sys.argv[1]
-    target_val = float(sys.argv[2])
-    target_lat = float(sys.argv[3])
-    target_lon = float(sys.argv[4])
-    target_ch = int(sys.argv[5])
-    out_file = sys.argv[6]
-    sens = str(sys.argv[7])
+    sens = str(sys.argv[2])
+    target_val = float(sys.argv[3])
+    target_lat = float(sys.argv[4])
+    target_lon = float(sys.argv[5])
+    list_ch = str(sys.argv[6])
+
+    target_ch = parse_channels_arg(list_ch)
+    print('target_ch[0]',target_ch[0],target_ch)
 
     # Example: search specifically for your ATOVS channel 4 case
     extra_conditions = [
         {
-            "key": "#"+str(target_ch)+"#brightnessTemperature",
+            "key": "#"+str(target_ch[0])+"#brightnessTemperature",
             "value": target_val,
             "tol": 1e-2,
         },
@@ -187,6 +195,9 @@ if __name__ == "__main__":
 
     target_dlat = np.round(np.rad2deg(target_lat), 2)
     target_dlon = np.round(np.rad2deg(target_lon), 2)
+
+    out_file = "single_selected_"+sens+".bufr"
+    subset_file = "single_subset_"+sens+".bufr"
 
     INSTRUMENT_CHANNELS = {
         'AMSU-A': list(range(1, 16)),        # 15 channels
@@ -200,10 +211,11 @@ if __name__ == "__main__":
         raise ValueError(f"Unknown instrument '{sens}'. Available: {list(INSTRUMENT_CHANNELS.keys())}")
 
     channels = INSTRUMENT_CHANNELS[sens]
-    if target_ch not in channels:
-        raise ValueError(f"Target channel {target_ch} not in {sens} channels {channels}")
+    for i in range(len(target_ch)):
+        if target_ch[i] not in channels:
+            raise ValueError(f"Target channel {target_ch} not in {sens} channels {channels}")
 
-    print(f"Instrument: {sens}, keeping channel {target_ch}, blanking {len(channels)-1} others")
+    print(f"Instrument: {sens}, keeping channel {target_ch}, blanking {len(channels)-len(target_ch)} others")
 
     matches = find_subsets(
         bufr_file,
@@ -233,9 +245,7 @@ if __name__ == "__main__":
         target = matches[0]
         print(f"Perfect match: message={target['message']}, subset={target['subset']}")
 
-    temp_file = "subset.bufr"
-
-    with open(bufr_file, "rb") as fin, open(temp_file, "wb") as fout:
+    with open(bufr_file, "rb") as fin, open(subset_file, "wb") as fout:
         msg_idx = 0
         while True:
             h = codes_bufr_new_from_file(fin)
@@ -255,10 +265,4 @@ if __name__ == "__main__":
 
     print(f"Extracted message {matches[0]['message']}, subset {matches[0]['subset']}")
 
-    blank_unwanted_channels(temp_file, out_file, channels, keep_channel=target_ch)
-
-    if os.path.isfile(temp_file):
-        os.remove(temp_file)
-    else:
-        # If it fails, inform the user.
-        print("Error: %s file not found" % temp_file)
+    blank_unwanted_channels(subset_file, out_file, channels, keep_channel=target_ch)

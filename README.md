@@ -59,24 +59,36 @@ git clone git@github.com:matemile/satellite-bufr-pp.git
 Run the driver script as the following.
 
 ```bash
-./driver.sh arg1 arg2 arg3 arg4 arg5 arg6 arg7
+./driver.sh arg1 arg2 arg3 arg4 arg5 arg6
 ``` 
 
 where
 
 - arg1: Input satellite BUFR
-- arg2: Observation value of the desired observation record in two decimal/digits
-- arg3: Latitude of the desired observation record in radian
-- arg4: Longitude of the desired observation record in radian
-- arg5: Channel number (intiger) of the desired record
-- arg6: Output satellite BUFR include only the desired single obs.
-- arg7: The name of the instrument (available: AMSU-A,MHS,ATMS,AWS)
+- arg2: The name of the instrument (available: AMSU-A,MHS,ATMS,AWS)
+- arg3: Observation value of the desired observation record in two decimal/digits
+- arg4: Latitude of the desired observation record in radian
+- arg5: Longitude of the desired observation record in radian
+- arg6: Desired channel or channels separated by comma (e.g., 4 or 4,1,2). The first listed channel has to match the observation, lat, and lon values!
 
 For example:
 
 ```bash
-./driver.sh /path/to/your/scratch/hm_home/your_exp/archive/observations/year/month/day/hour/amsub.thinned.yourdatehour 245.95 1.2266941927887 -0.0010541788682046 4 your-single-obs.bufr MHS
+./driver.sh /path/to/your/scratch/hm_home/your_exp/archive/observations/year/month/day/hour/amsub.thinned.yourdatehour MHS 245.95 1.2266941927887 -0.0010541788682046 4 
 ```
+
+or
+
+´´´bash
+./driver.sh /path/to/your/dir/awsyourdatehour AWS 215.32 1.1743936564234 0.42650261865135 7,4,5,12,14,15,16,17,18
+´´´
+
+#### Output files
+
+The driver script create two BUFR files as output. A BUFR file which contains all channels for the given single obs as single subset. Another one which consists of only selected channels according to the list provided in arg6.
+
+- single\_subset\_$arg2.bufr
+- single\_selected\_$arg2.bufr
 
 #### Check your output (optional, not manadatory)
 
@@ -92,7 +104,11 @@ bufr_dump -p $output_single_obs.bufr
 The driver script by default makes a plot about the location of the single obs
 See the above example here:
 
-![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/singleobs/example.png?raw=true)
+![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/singleobs/mhs_example_location.png?raw=true)
+
+and another with AWS radiance here:
+
+![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/singleobs/aws_example_location.png?raw=true)
 
 ### Rerun your assimilation
 Modify your Bator script and fetch the single obs BUFR

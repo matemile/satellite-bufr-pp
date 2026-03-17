@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from extract_write import parse_channels_arg
 from mpl_toolkits.basemap import Basemap
 from eccodes import (
     codes_bufr_new_from_file, codes_set, codes_get_array,
@@ -58,17 +59,19 @@ def plot_single_obs_auto(bufr_file, channel_num):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} BUFRFILE CHANNEL", file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} SENSORNAME CHANNEL", file=sys.stderr)
         print(
-            f"{sys.argv[0]} BUFRFILE CHANNEL",
+            f"{sys.argv[0]} SENSORNAME CHANNEL",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    bufr_file = sys.argv[1]
-    channel = int(sys.argv[2])
+    bufr_file = "single_selected_"+sys.argv[1]+".bufr" #sys.argv[1]
+    allchannel = str(sys.argv[2])
 
-    print('bufr_file,channel',bufr_file,channel)
+    channel = parse_channels_arg(allchannel)
+
+    print('bufr_file,channel',bufr_file,channel[0])
 
     # Usage
-    plot_single_obs_auto(bufr_file, channel)
+    plot_single_obs_auto(bufr_file, channel[0])
