@@ -2,7 +2,7 @@
 
 A repository to alter or make certain processes with satellite BUFR data. It helps to obtain single observations, footprint representation (coming later), and else. The content(scripts, programs, else) is tailed for the use on ECMWF's HPC Atos.
 
-## Single observation
+## Single observation (directory: singleobs)
 
 ### Select an active radiance record/observation
 
@@ -88,8 +88,8 @@ or
 The driver script create two BUFR files as output. A BUFR file which contains all channels for the given single obs as single subset. Another one which consists of only selected channels according to the list provided in arg6.
 
 ```bash
-single\_subset\_$arg2.bufr
-single\_selected\_$arg2.bufr
+single_subset_$arg2.bufr
+single_selected_$arg2.bufr
 ```
 
 #### Check your output (optional, not manadatory)
@@ -123,4 +123,32 @@ For example in scr/Bator
 > ln -sf /your/git/satellite-bufr-pp/your-single-obs.bufr ./BUFR.amsub
 >
 
-## Footprint representation
+## Footprint representation (directory: footprint)
+
+After the single observation BUFR file is created, there's an opportunity to visualise the FOV and antenna pattern on the ground given by the sensor we have. So far this visualisation works with AMSU-A, MHS, and IASI radiances.
+
+### Use the python program with proper arguments
+
+```bash
+python3 sampling_repres.py arg1 arg2 arg3
+```
+
+where
+
+- arg1: Input satellite single obs BUFR (e.g., ../singleobs/single\_subset_$SENSOR.bufr)
+- arg2: The sensorID of the IAL radiance coding (e.g., MHS = 15, IASI = 16, etc)
+- arg3: The name of the sensor (e.g., MHS)
+
+For example:
+
+```bash
+python3 sampling_repres.py ../singleobs/single_subset_MHS.bufr 15 MHS
+```
+
+### Check the generated plot
+
+The python program produces a plot about the antenna pattern and possible footprint operator representation.
+
+An exmaple for MHS single obs presented above:
+
+![alt text](https://github.com/matemile/satellite-bufr-pp/blob/main/footprint/MHS_antenna_sampling.png?raw=true)
