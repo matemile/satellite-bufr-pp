@@ -125,7 +125,7 @@ For example in scr/Bator
 
 ## Footprint representation (directory: footprint)
 
-After the single observation BUFR file is created, there's an opportunity to visualise the FOV and antenna pattern on the ground given by the sensor we have. So far this visualisation works with AMSU-A, MHS, and IASI radiances. The python program of the antenna pattern representation is provided by Patrick Eriksson and the footprint operator point representation is made by Máté Mile.
+After the single observation BUFR file is created, there's an opportunity to visualise the FOV (and later antenna pattern) on the ground given by the sensor we have. So far this visualisation works with AMSU-A, MHS, and IASI radiances.
 
 ### Use the python program with proper arguments
 
